@@ -1,360 +1,1373 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Destiny Orb: Cosmic Edition ✨</title>
-<style>
-  /* === Base Styling === */
-  :root {
-    --pink: #ff79c6;
-    --aqua: #00ffff;
-    --bg-dark: #0b0033;
-    --motion: 1; /* motion intensity (1 = normal, 0 = reduced) */
-  }
-
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: radial-gradient(circle at top, var(--bg-dark), #1a0b52, #000);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: start;
-    min-height: 100vh;
-    padding: 20px;
-    overflow-y: auto;
-    transition: background 1s ease;
-  }
-
-  /* === Nebula Background === */
-  body::before {
-    content: "";
-    position: fixed;
-    width: 200%;
-    height: 200%;
-    background:
-      radial-gradient(circle at 20% 30%, rgba(255,64,129,0.25), transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(0,255,255,0.25), transparent 40%),
-      radial-gradient(circle at 50% 90%, rgba(255,255,255,0.1), transparent 40%);
-    animation: moveNebula 25s linear infinite alternate;
-    z-index: -1;
-    opacity: calc(0.6 * var(--motion));
-  }
-
-  @keyframes moveNebula {
-    0% { transform: translate(0,0) scale(1); }
-    100% { transform: translate(-100px, -80px) scale(1.1); }
-  }
-
-  /* === Title === */
-  h1 {
-    color: #ffb6c1;
-    text-shadow: 0 0 15px #ff4081, 0 0 30px #0ff;
-    margin-top: 10px;
-    text-align: center;
-    font-size: 2.2rem;
-    animation: fadeInDown 1s ease both;
-  }
-
-  @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* === Containers === */
-  .container {
-    background: rgba(25, 25, 40, 0.85);
-    padding: 20px;
-    border-radius: 20px;
-    margin: 20px 0;
-    width: 100%;
-    max-width: 420px;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(255,64,129,0.4);
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-  }
-  .container:hover {
-    transform: scale(calc(1 + 0.03 * var(--motion)));
-    box-shadow: 0 0 40px rgba(255,121,198,0.8);
-  }
-
-  input[type="text"] {
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    margin: 10px 0;
-    width: 80%;
-    font-size: 1em;
-  }
-
-  button {
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: none;
-    background: linear-gradient(90deg, #ff4081, #ff79c6);
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 0 15px #ff4081;
-    transition: transform 0.3s ease, background 0.3s ease;
-  }
-  button:hover {
-    transform: scale(calc(1.05 * var(--motion)));
-    background: linear-gradient(90deg, #ff79c6, #0ff);
-  }
-
-  /* === Forecast === */
-  .forecast {
-    background: rgba(255,255,255,0.08);
-    padding: 10px;
-    border-radius: 10px;
-    font-style: italic;
-    color: #aeefff;
-    text-shadow: 0 0 8px #0ff;
-    margin-bottom: 15px;
-  }
-
-  /* === Magic 8 Ball === */
-  #eightBall {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #222 40%, #000);
-    box-shadow: inset 0 0 50px #00ffffaa, 0 0 40px #00ffffaa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px auto;
-    font-size: 4rem;
-    position: relative;
-    transition: transform 0.3s ease;
-  }
-
-  #eightBall.shake {
-    animation: shake calc(0.8s * var(--motion)) ease-in-out,
-               glowPulse calc(1.5s * var(--motion)) ease-in-out infinite alternate;
-  }
-
-  @keyframes shake {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(10deg); }
-    50% { transform: rotate(-10deg); }
-    75% { transform: rotate(5deg); }
-  }
-  @keyframes glowPulse {
-    from { box-shadow: inset 0 0 30px #0ff, 0 0 20px #0ff; }
-    to { box-shadow: inset 0 0 60px #ff79c6, 0 0 40px #ff79c6; }
-  }
-
-  /* === Love Meter === */
-  .love-meter {
-    width: 80%;
-    height: 12px;
-    background: #333;
-    border-radius: 10px;
-    margin: 10px auto;
-    overflow: hidden;
-  }
-  .love-meter-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #ff4081, #ff79c6, #ffb6c1);
-    border-radius: 10px;
-    transition: width 1s ease-in-out;
-  }
-  .love-meter-fill.pulse {
-    animation: heartPulse calc(1s * var(--motion)) infinite alternate;
-  }
-  @keyframes heartPulse {
-    from { filter: brightness(1); }
-    to { filter: brightness(1.6); }
-  }
-
-  /* === Fate Card === */
-  .fate-card {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid #ff79c6;
-    border-radius: 15px;
-    padding: 8px 12px;
-    margin-top: 10px;
-    display: inline-block;
-    color: #ffd1dc;
-    text-shadow: 0 0 6px #ff79c6;
-    animation: fadeIn 1s forwards;
-  }
-  .rare {
-    border-color: gold;
-    color: #ffeb99;
-    text-shadow: 0 0 8px gold;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-  }
-
-  /* === Floating Particles === */
-  .particle {
-    position: fixed;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.6);
-    animation: floatParticle 8s linear infinite;
-    opacity: calc(0.8 * var(--motion));
-  }
-
-  @keyframes floatParticle {
-    from { transform: translateY(100vh) scale(0.5); opacity: 0.6; }
-    to { transform: translateY(-10vh) scale(1); opacity: 0; }
-  }
-
-  /* === Accessibility Controls === */
-  .settings {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: #aeefff;
-  }
-
-  .settings label {
-    cursor: pointer;
-  }
-
-</style>
-</head>
-<body>
-
-<h1>✨ Destiny Orb: Cosmic Edition ✨</h1>
-<div class="forecast" id="forecast"></div>
-
-<div class="container">
-  <h2>Ask the Orb</h2>
-  <div id="eightBall">🎱</div>
-  <input id="question" type="text" placeholder="Type your question here">
-  <br>
-  <button onclick="shake8Ball()">Ask</button>
-  <p id="answer"></p>
-  <div id="fateCardContainer"></div>
-</div>
-
-<div class="container">
-  <h2>Relationship Predictor 💕</h2>
-  <input id="name1" placeholder="Your name">
-  <input id="name2" placeholder="Their name">
-  <button onclick="predictMatch()">Predict</button>
-  <div class="love-meter"><div id="loveMeterFill" class="love-meter-fill"></div></div>
-  <p id="matchResult"></p>
-</div>
-
-<div class="settings">
-  <input type="checkbox" id="reduceMotion" onchange="toggleMotion()">
-  <label for="reduceMotion">Reduce motion / animations</label>
-</div>
-
-<script>
-/* === Answers and Cards === */
-const answers = [
-  "Yes", "No", "Maybe", "Definitely", "Ask again later",
-  "Absolutely", "Certainly not", "Very likely", "Unlikely",
-  "Without a doubt", "Impossible", "Signs point to yes", "Concentrate and ask again"
-];
-
-const fateCards = [
-  "The stars are aligning in your favor 🌟",
-  "Patience will reveal the truth 🕊️",
-  "Fortune favors the bold 💫",
-  "A new opportunity awaits 🎁",
-  "Follow your intuition ✨",
-  "Trust the journey 🚀",
-  "Your energy attracts your destiny 🌙",
-  "Rare: The cosmos bends in your favor 💎"
-];
-
-let lastQuestion = "";
-
-/* === Main 8 Ball Function === */
-function shake8Ball() {
-  const question = document.getElementById('question').value.trim();
-  const answerElement = document.getElementById('answer');
-  const fateContainer = document.getElementById('fateCardContainer');
-  const eightBall = document.getElementById('eightBall');
-
-  if (!question) {
-    answerElement.textContent = "Please ask a question!";
-    return;
-  }
-
-  eightBall.classList.add("shake");
-  setTimeout(() => eightBall.classList.remove("shake"), 1000);
-
-  setTimeout(() => {
-    let randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-    if (question === lastQuestion) {
-      randomAnswer = answers[Math.floor(Math.random() * answers.length)];
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AETHER ORB // 2027 COSMIC SYNAPSE</title>
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            aether: {
+              50: '#f0f4ff',
+              100: '#e0e8ff',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              900: '#0b0f19',
+              950: '#05070e',
+            },
+            cyanGlow: '#00f3ff',
+            pinkGlow: '#ff00a0',
+            violetGlow: '#8a2be2',
+            goldGlow: '#ffd700',
+          },
+          animation: {
+            'pulse-glow': 'pulseGlow 3s infinite alternate',
+            'float-slow': 'floatSlow 6s ease-in-out infinite',
+            'scanline': 'scanline 8s linear infinite',
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%': { boxShadow: '0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 15px rgba(0, 243, 255, 0.1)' },
+              '100%': { boxShadow: '0 0 35px rgba(255, 0, 160, 0.5), inset 0 0 25px rgba(255, 0, 160, 0.3)' },
+            },
+            floatSlow: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            scanline: {
+              '0%': { transform: 'translateY(-100%)' },
+              '100%': { transform: 'translateY(1000%)' }
+            }
+          }
+        }
+      }
     }
-    lastQuestion = question;
+  </script>
 
-    answerElement.textContent = randomAnswer;
+  <!-- Three.js CDN for 3D Cosmic Orb -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    fateContainer.innerHTML = "";
-    const card = document.createElement("div");
-    card.classList.add("fate-card");
-    const rareChance = Math.random() < 0.1;
-    if (rareChance) card.classList.add("rare");
-    card.textContent = fateCards[Math.floor(Math.random() * fateCards.length)];
-    fateContainer.appendChild(card);
-  }, 1200);
-}
+  <style>
+    /* Glassmorphism & Custom Spatial Styles */
+    .glass-panel {
+      background: rgba(11, 15, 25, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    
+    .glass-panel-hover {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-panel-hover:hover {
+      border-color: rgba(0, 243, 255, 0.3);
+      box-shadow: 0 12px 40px 0 rgba(0, 243, 255, 0.15);
+      transform: translateY(-2px);
+    }
 
-/* === Relationship Predictor === */
-function predictMatch() {
-  const name1 = document.getElementById("name1").value.trim();
-  const name2 = document.getElementById("name2").value.trim();
-  const result = document.getElementById("matchResult");
-  const fill = document.getElementById("loveMeterFill");
+    .glass-input {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: #fff;
+    }
+    .glass-input:focus {
+      outline: none;
+      border-color: #00f3ff;
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+    }
 
-  if (!name1 || !name2) {
-    result.textContent = "Please enter both names!";
-    fill.style.width = "0%";
-    return;
-  }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(5, 7, 14, 0.8);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 243, 255, 0.4);
+    }
 
-  const seed = Array.from(name1 + name2).reduce((a,c)=>a+c.charCodeAt(0),0);
-  const percent = seed % 101;
-  let tier = percent > 85 ? "S+" : percent > 70 ? "A" : percent > 55 ? "B" : percent > 40 ? "C" : "D";
+    /* Holographic Rarity Glows */
+    .rarity-COMMON { border-color: rgba(255,255,255,0.2); text-shadow: 0 0 5px rgba(255,255,255,0.3); }
+    .rarity-RARE { border-color: #00f3ff; box-shadow: 0 0 15px rgba(0,243,255,0.3); text-shadow: 0 0 8px #00f3ff; }
+    .rarity-MYTHIC { border-color: #ff00a0; box-shadow: 0 0 20px rgba(255,0,160,0.4); text-shadow: 0 0 10px #ff00a0; }
+    .rarity-CELESTIAL { 
+      border-color: #ffd700; 
+      background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(138,43,226,0.2));
+      box-shadow: 0 0 25px rgba(255,215,0,0.5); 
+      text-shadow: 0 0 12px #ffd700; 
+    }
 
-  result.textContent = `${name1} ❤️ ${name2} — Compatibility: ${percent}% (Tier ${tier})`;
-  fill.style.width = `${percent}%`;
-  fill.classList.toggle("pulse", percent > 75);
-}
+    /* 3D Card Flip Effects */
+    .perspective-1000 { perspective: 1000px; }
+    .transform-style-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
 
-/* === Forecast === */
-const forecasts = [
-  "✨ Today’s energy: Focus on gratitude and small wins.",
-  "🌙 The stars whisper: Rest before new challenges arise.",
-  "🔥 Confidence attracts success—walk boldly today.",
-  "🌊 Let go of control; destiny flows in your favor.",
-  "🌟 Someone’s thinking of you in kindness."
-];
-document.getElementById("forecast").textContent =
-  forecasts[Math.floor(Math.random() * forecasts.length)];
+    /* Touch target optimizations */
+    button, input, select {
+      touch-action: manipulation;
+    }
+  </style>
+</head>
+<body class="bg-aether-950 text-slate-100 font-sans min-h-screen flex flex-col overflow-x-hidden selection:bg-cyanGlow selection:text-black">
 
-/* === Floating Particles === */
-for (let i = 0; i < 30; i++) {
-  const p = document.createElement("div");
-  p.classList.add("particle");
-  p.style.left = Math.random() * 100 + "vw";
-  p.style.animationDelay = Math.random() * 8 + "s";
-  document.body.appendChild(p);
-}
+  <!-- Background Canvas for Ambient Starfield/Particles -->
+  <canvas id="starfieldCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
 
-/* === Reduce Motion Toggle === */
-function toggleMotion() {
-  const reduced = document.getElementById("reduceMotion").checked;
-  document.documentElement.style.setProperty("--motion", reduced ? 0 : 1);
-}
-</script>
+  <!-- Sticky Spatial Header -->
+  <header class="sticky top-0 z-40 w-full glass-panel border-b border-white/10 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Logo & Stardate -->
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyanGlow via-violetGlow to-pinkGlow animate-spin-slow flex items-center justify-center p-[2px]">
+          <div class="w-full h-full bg-aether-950 rounded-full flex items-center justify-center">
+            <span class="w-2 h-2 rounded-full bg-cyanGlow shadow-[0_0_8px_#00f3ff]"></span>
+          </div>
+        </div>
+        <div>
+          <h1 class="font-display font-bold text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyanGlow via-white to-pinkGlow">
+            AETHER ORB <span class="text-xs font-mono px-1.5 py-0.5 rounded bg-white/10 text-cyanGlow border border-cyanGlow/30">2027 v4.8</span>
+          </h1>
+          <p class="text-[10px] font-mono text-slate-400 flex items-center gap-2">
+            <span>STARDATE: <span id="stardateDisplay">---</span></span>
+            <span class="text-white/20">|</span>
+            <span class="text-cyanGlow flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block mr-1 animate-pulse"></span> SYNAPSE ONLINE</span>
+          </p>
+        </div>
+      </div>
 
+      <!-- Navigation Tabs -->
+      <nav class="hidden md:flex items-center space-x-1 bg-white/5 p-1 rounded-xl border border-white/10 text-xs font-mono">
+        <button onclick="switchTab('oracle')" id="nav-oracle" class="tab-btn px-4 py-2 rounded-lg transition-all font-semibold bg-cyanGlow/20 text-cyanGlow border border-cyanGlow/40">
+          SPATIAL ORACLE
+        </button>
+        <button onclick="switchTab('synastry')" id="nav-synastry" class="tab-btn px-4 py-2 rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5">
+          SYNASTRY MATCH
+        </button>
+        <button onclick="switchTab('tarot')" id="nav-tarot" class="tab-btn px-4 py-2 rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5">
+          TAROT DECK
+        </button>
+        <button onclick="switchTab('journal')" id="nav-journal" class="tab-btn px-4 py-2 rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5">
+          LOGS & JOURNAL
+        </button>
+      </nav>
+
+      <!-- System Controls & Audio Toggles -->
+      <div class="flex items-center space-x-2">
+        <!-- Audio Synth Toggle -->
+        <button id="audioToggleBtn" onclick="toggleAudio()" class="p-2.5 rounded-xl glass-panel hover:bg-white/10 text-slate-300 hover:text-cyanGlow transition-all" title="Toggle Audio Synth">
+          <svg id="audioIconOff" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke-dasharray="2 2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
+          <svg id="audioIconOn" class="w-4 h-4 text-cyanGlow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+        </button>
+
+        <!-- Ambient Drone Toggle -->
+        <button id="ambientToggleBtn" onclick="toggleAmbientDrone()" class="px-2.5 py-1.5 rounded-xl glass-panel text-[11px] font-mono text-slate-300 hover:text-pinkGlow hover:border-pinkGlow/30 transition-all flex items-center gap-1.5" title="Toggle Ambient Audio Drone">
+          <span class="w-2 h-2 rounded-full bg-slate-500" id="ambientStatusDot"></span>
+          <span>AMBIENCE</span>
+        </button>
+
+        <!-- Settings Modal Toggle -->
+        <button onclick="toggleSettingsModal()" class="p-2.5 rounded-xl glass-panel hover:bg-white/10 text-slate-300 hover:text-cyanGlow transition-all" title="System Settings">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-panel border-t border-white/10 px-2 py-2 flex justify-around text-[10px] font-mono">
+    <button onclick="switchTab('oracle')" id="mob-nav-oracle" class="mob-tab-btn flex flex-col items-center p-1 text-cyanGlow">
+      <span>🔮</span>
+      <span>ORACLE</span>
+    </button>
+    <button onclick="switchTab('synastry')" id="mob-nav-synastry" class="mob-tab-btn flex flex-col items-center p-1 text-slate-400">
+      <span>💕</span>
+      <span>MATCH</span>
+    </button>
+    <button onclick="switchTab('tarot')" id="mob-nav-tarot" class="mob-tab-btn flex flex-col items-center p-1 text-slate-400">
+      <span>🃏</span>
+      <span>TAROT</span>
+    </button>
+    <button onclick="switchTab('journal')" id="mob-nav-journal" class="mob-tab-btn flex flex-col items-center p-1 text-slate-400">
+      <span>📜</span>
+      <span>LOGS</span>
+    </button>
+  </div>
+
+  <!-- Cosmic Telemetry & Daily Forecast Bar -->
+  <section class="w-full bg-black/40 border-b border-white/5 py-2 px-4 text-xs font-mono relative z-10">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-slate-400">
+      <div class="flex items-center space-x-4 overflow-x-auto no-scrollbar py-0.5">
+        <span class="flex items-center text-cyanGlow">
+          <span class="inline-block w-2 h-2 rounded-full bg-cyanGlow mr-1.5 animate-ping"></span>
+          COSMIC FREQUENCY: <strong id="cosmicFreqDisplay" class="ml-1 text-white">432.8 Hz</strong>
+        </span>
+        <span class="text-white/20">|</span>
+        <span>LUNAR PHASE: <strong id="lunarPhaseDisplay" class="text-slate-200">Waxing Gibbous (88%)</strong></span>
+        <span class="text-white/20">|</span>
+        <span>RESONANCE INDEX: <strong id="resonanceIndexDisplay" class="text-pinkGlow">94.2%</strong></span>
+      </div>
+
+      <div class="flex items-center space-x-2 ml-auto">
+        <span class="text-[11px] text-slate-300 italic hidden sm:inline" id="dailyForecastText">"Quantum alignment favors bold decision trees."</span>
+        <button onclick="refreshForecast()" class="text-cyanGlow hover:text-white transition-colors" title="Refresh Telemetry">↻</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 pb-20 md:pb-8 relative z-10">
+
+    <!-- ================= TAB 1: SPATIAL AI ORACLE ================= -->
+    <section id="tab-oracle" class="tab-content block space-y-6">
+      
+      <!-- Spatial WebGL Orb Display & Workspace Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left / Center Column: The 3D Interactive Orb Container -->
+        <div class="lg:col-span-7 glass-panel rounded-3xl p-6 flex flex-col items-center justify-center relative overflow-hidden min-h-[420px] lg:min-h-[520px]">
+          
+          <!-- Background Glow Effect -->
+          <div class="absolute w-72 h-72 rounded-full bg-cyanGlow/10 blur-3xl pointer-events-none"></div>
+          <div class="absolute w-72 h-72 rounded-full bg-pinkGlow/10 blur-3xl pointer-events-none transform translate-x-20 translate-y-20"></div>
+
+          <!-- WebGL Three.js Canvas Container -->
+          <div id="orbCanvasContainer" class="w-full h-72 sm:h-80 md:h-96 relative cursor-grab active:cursor-grabbing flex items-center justify-center">
+            <!-- Canvas is dynamically injected here -->
+          </div>
+
+          <!-- Status / Interaction Banner beneath Orb -->
+          <div class="text-center z-10 mt-2 space-y-1">
+            <h2 id="orbStateLabel" class="font-display font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-r from-cyanGlow via-white to-pinkGlow">
+              AETHER SYNAPSE READY
+            </h2>
+            <p id="orbSubLabel" class="text-xs font-mono text-slate-400">
+              Touch, drag to rotate • Double-click or ask a query to induce Quantum Collapse
+            </p>
+          </div>
+
+          <!-- Quick Action Buttons on Orb -->
+          <div class="mt-4 flex flex-wrap justify-center gap-2 z-10">
+            <button onclick="triggerOrbPulse('cyan')" class="px-3 py-1.5 rounded-xl bg-cyanGlow/10 border border-cyanGlow/30 text-cyanGlow text-xs font-mono hover:bg-cyanGlow/20 transition-all">
+              ⚡ PULSE CYAN
+            </button>
+            <button onclick="triggerOrbPulse('pink')" class="px-3 py-1.5 rounded-xl bg-pinkGlow/10 border border-pinkGlow/30 text-pinkGlow text-xs font-mono hover:bg-pinkGlow/20 transition-all">
+              💖 PULSE PINK
+            </button>
+            <button onclick="triggerOrbPulse('gold')" class="px-3 py-1.5 rounded-xl bg-goldGlow/10 border border-goldGlow/30 text-goldGlow text-xs font-mono hover:bg-goldGlow/20 transition-all">
+              ✨ QUANTUM OVERLOAD
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Query Form & Multi-Dimensional Reading Result -->
+        <div class="lg:col-span-5 space-y-4">
+          
+          <!-- Query Form Glass Panel -->
+          <div class="glass-panel rounded-3xl p-6 space-y-4">
+            
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <h3 class="font-display font-bold text-base text-slate-100 flex items-center gap-2">
+                <span>🔮</span> ASK THE SPATIAL ORACLE
+              </h3>
+              <!-- Category Selector -->
+              <select id="oracleCategory" class="glass-input text-xs font-mono rounded-lg px-2.5 py-1.5 text-cyanGlow cursor-pointer">
+                <option value="General" class="bg-aether-950 text-slate-200">✨ General Fate</option>
+                <option value="Love" class="bg-aether-950 text-slate-200">💕 Love & Romance</option>
+                <option value="Career" class="bg-aether-950 text-slate-200">💎 Career & Wealth</option>
+                <option value="Spiritual" class="bg-aether-950 text-slate-200">🌙 Cosmic / Spiritual</option>
+                <option value="Tech" class="bg-aether-950 text-slate-200">⚡ Code & Future Tech</option>
+              </select>
+            </div>
+
+            <!-- Input Controls with Voice Recognition -->
+            <div class="space-y-2">
+              <label class="text-xs font-mono text-slate-400 block">TRANSMIT YOUR QUERY INTO THE SYNAPSE</label>
+              <div class="relative flex items-center">
+                <input type="text" id="oracleInput" placeholder="Should I embark on this new path?..." 
+                  class="w-full glass-input rounded-2xl py-3 pl-4 pr-24 text-sm placeholder-slate-500 focus:ring-1 focus:ring-cyanGlow transition-all"
+                  onkeydown="if(event.key === 'Enter') invokeSpatialOracle()">
+                
+                <!-- Voice Input Button -->
+                <button id="voiceInputBtn" onclick="toggleSpeechRecognition()" class="absolute right-12 p-2 text-slate-400 hover:text-cyanGlow transition-colors" title="Speech Input">
+                  <svg id="micIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 016 0v6a3 3 0 01-3 3z"/></svg>
+                </button>
+
+                <!-- Execute Button -->
+                <button onclick="invokeSpatialOracle()" class="absolute right-2 p-2 bg-gradient-to-r from-cyanGlow to-aether-500 rounded-xl text-black font-bold hover:brightness-110 transition-all shadow-[0_0_10px_rgba(0,243,255,0.4)]">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div id="speechStatus" class="hidden text-xs font-mono text-cyanGlow animate-pulse">
+              🎙️ Listening to acoustic cosmic resonance... Speak now.
+            </div>
+
+          </div>
+
+          <!-- Multi-Dimensional Result Panel -->
+          <div id="oracleResultCard" class="glass-panel rounded-3xl p-6 hidden space-y-4 border border-cyanGlow/30 transition-all animate-fadeIn">
+            
+            <div class="flex items-center justify-between border-b border-white/10 pb-2">
+              <span class="text-xs font-mono text-slate-400">QUANTUM COLLAPSE RESULT</span>
+              <span id="resultRarityTag" class="text-[10px] font-mono px-2 py-0.5 rounded border border-cyanGlow text-cyanGlow">RARE</span>
+            </div>
+
+            <!-- Primary Oracle Answer -->
+            <div>
+              <p class="text-xs font-mono text-slate-400">ORACLE VERDICT</p>
+              <h4 id="resultMainAnswer" class="font-display font-bold text-2xl text-cyanGlow mt-1">
+                --
+              </h4>
+            </div>
+
+            <!-- Probability & Element Breakdown Grid -->
+            <div class="grid grid-cols-2 gap-3 text-xs font-mono bg-white/5 p-3 rounded-2xl border border-white/5">
+              <div>
+                <span class="text-slate-400 block">PROBABILITY</span>
+                <span id="resultProbability" class="text-base font-bold text-pinkGlow">89.4%</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block">ELEMENT SYNAPSE</span>
+                <span id="resultElement" class="text-base font-bold text-goldGlow">⚡ AETHER / PLASMA</span>
+              </div>
+            </div>
+
+            <!-- Holographic Fate Card Display -->
+            <div id="holographicCard" class="p-4 rounded-2xl border bg-gradient-to-br from-white/5 to-white/0 space-y-2 transition-all">
+              <div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span>HOLOGRAPHIC FATE DECK</span>
+                <span id="cardRarityText">CELESTIAL #809</span>
+              </div>
+              <p id="resultFateCard" class="font-display text-sm font-semibold text-slate-200 italic">
+                "The stars do not force; they reveal the path of least resistance."
+              </p>
+            </div>
+
+            <!-- Action Controls (Share Snapshot & Save Log) -->
+            <div class="flex items-center justify-between pt-2">
+              <button onclick="shareOracleOutcome()" class="px-3 py-1.5 rounded-xl glass-panel text-xs font-mono hover:text-cyanGlow transition-colors flex items-center gap-1.5">
+                <span>📋</span> COPY SNAPSHOT
+              </button>
+              <span id="savedIndicator" class="text-[10px] font-mono text-emerald-400 hidden">✓ LOGGED TO SYNAPSE</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= TAB 2: SYNASTRY RESONANCE MATCH ================= -->
+    <section id="tab-synastry" class="tab-content hidden space-y-6">
+      
+      <div class="max-w-4xl mx-auto glass-panel rounded-3xl p-6 md:p-8 space-y-8">
+        
+        <div class="text-center space-y-2">
+          <h2 class="font-display font-bold text-2xl md:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-pinkGlow via-white to-cyanGlow">
+            SYNAPTIC RESONANCE ENGINE
+          </h2>
+          <p class="text-xs font-mono text-slate-400 max-w-lg mx-auto">
+            Analyze harmonic biometrics, name frequency matrices, and planetary synastry alignment for multi-dimensional compatibility.
+          </p>
+        </div>
+
+        <!-- Input Names Form -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+          <div class="space-y-1">
+            <label class="text-xs font-mono text-slate-400">SUBJECT A (NAME / FREQUENCY)</label>
+            <input type="text" id="synastryName1" placeholder="e.g. Orion Vance" class="w-full glass-input rounded-2xl py-3 px-4 text-sm">
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-mono text-slate-400">SUBJECT B (NAME / FREQUENCY)</label>
+            <input type="text" id="synastryName2" placeholder="e.g. Lyra Vega" class="w-full glass-input rounded-2xl py-3 px-4 text-sm">
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button onclick="calculateSynastry()" class="px-8 py-3 rounded-2xl bg-gradient-to-r from-pinkGlow via-aether-500 to-cyanGlow text-black font-bold font-display tracking-wider hover:brightness-125 transition-all shadow-[0_0_20px_rgba(255,0,160,0.4)]">
+            ⚡ COMPUTE RESONANCE
+          </button>
+        </div>
+
+        <!-- Animated Wave Visualizer Canvas -->
+        <div id="synastryWaveContainer" class="w-full h-24 bg-black/40 rounded-2xl border border-white/10 relative overflow-hidden hidden flex items-center justify-center">
+          <canvas id="synastryCanvas" class="w-full h-full"></canvas>
+        </div>
+
+        <!-- Synastry Calculation Results -->
+        <div id="synastryResultPanel" class="hidden space-y-6 pt-4 border-t border-white/10 animate-fadeIn">
+          
+          <!-- Score Gauge Header -->
+          <div class="flex flex-col sm:flex-row items-center justify-between bg-white/5 p-6 rounded-3xl border border-white/10 gap-4">
+            <div class="text-center sm:text-left space-y-1">
+              <span class="text-xs font-mono text-slate-400">HARMONIC OVERALL SCORE</span>
+              <h3 id="synastryOverallScore" class="font-display font-extrabold text-4xl text-pinkGlow">
+                92.8%
+              </h3>
+              <p id="synastryTierLabel" class="text-xs font-mono text-goldGlow">TIER S+ // CELESTIAL TWIN FLAME</p>
+            </div>
+
+            <!-- Score Bar Progress -->
+            <div class="w-full sm:w-1/2 space-y-2">
+              <div class="h-4 w-full bg-black/60 rounded-full p-0.5 border border-white/10 overflow-hidden">
+                <div id="synastryProgressBar" class="h-full bg-gradient-to-r from-pinkGlow via-violetGlow to-cyanGlow rounded-full transition-all duration-1000" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                <span>DISCORD (0%)</span>
+                <span>HARMONY (100%)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Synastry Tri-Aspect Breakdown Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <div class="glass-panel p-4 rounded-2xl border-l-4 border-cyanGlow space-y-1">
+              <span class="text-xs font-mono text-slate-400">INTELLECTUAL MATRIX</span>
+              <p id="scoreIntellectual" class="font-display font-bold text-xl text-cyanGlow">88%</p>
+              <p class="text-[11px] font-sans text-slate-300">Synchronized mental frequencies & thought execution.</p>
+            </div>
+
+            <div class="glass-panel p-4 rounded-2xl border-l-4 border-pinkGlow space-y-1">
+              <span class="text-xs font-mono text-slate-400">EMOTIONAL AURA</span>
+              <p id="scoreEmotional" class="font-display font-bold text-xl text-pinkGlow">95%</p>
+              <p class="text-[11px] font-sans text-slate-300">Deep intuitive resonance and empathy loops.</p>
+            </div>
+
+            <div class="glass-panel p-4 rounded-2xl border-l-4 border-goldGlow space-y-1">
+              <span class="text-xs font-mono text-slate-400">SPIRITUAL SYNASTRY</span>
+              <p id="scoreSpiritual" class="font-display font-bold text-xl text-goldGlow">94%</p>
+              <p class="text-[11px] font-sans text-slate-300">Karmic bond aligning across temporal timelines.</p>
+            </div>
+
+          </div>
+
+          <!-- AI Generated Synastry Guidance -->
+          <div class="glass-panel p-5 rounded-2xl space-y-2">
+            <h4 class="text-xs font-mono text-cyanGlow flex items-center gap-1.5">
+              <span>💡</span> ORACLE GUIDANCE FOR THIS PAIR
+            </h4>
+            <p id="synastryAdviceText" class="text-sm font-sans text-slate-200 leading-relaxed italic">
+              "Your combined frequency creates an amplified spatial shield. Focus on shared creative projects to harness this energy."
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= TAB 3: TAROT DECK ================= -->
+    <section id="tab-tarot" class="tab-content hidden space-y-6">
+      
+      <div class="glass-panel rounded-3xl p-6 md:p-8 space-y-6">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div>
+            <h2 class="font-display font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-goldGlow via-white to-cyanGlow">
+              3-CARD SPATIAL TAROT ORACLE
+            </h2>
+            <p class="text-xs font-mono text-slate-400">Draw 3 celestial cards to reveal PAST, PRESENT, and FUTURE quantum trajectories.</p>
+          </div>
+
+          <button onclick="drawTarotDeck()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-goldGlow to-aether-500 text-black font-bold font-mono text-xs hover:brightness-110 transition-all shadow-[0_0_15px_rgba(255,215,0,0.3)]">
+            🃏 SHUFFLE & DRAW CARDS
+          </button>
+        </div>
+
+        <!-- 3 Cards Spatial Grid Container -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+          
+          <!-- Card 1: PAST -->
+          <div class="flex flex-col items-center space-y-3">
+            <span class="text-xs font-mono text-slate-400 tracking-wider">I. THE PAST</span>
+            <div id="tarotCard1" onclick="flipTarotCard(1)" class="w-full max-w-[220px] h-[320px] perspective-1000 cursor-pointer group">
+              <div class="card-inner relative w-full h-full transition-transform duration-700 transform-style-3d shadow-xl">
+                <!-- Card Back -->
+                <div class="card-front absolute inset-0 rounded-2xl border-2 border-goldGlow/40 bg-aether-900 flex flex-col items-center justify-center p-4 backface-hidden text-center">
+                  <div class="w-16 h-16 rounded-full border border-goldGlow/30 flex items-center justify-center text-2xl">✨</div>
+                  <span class="text-[10px] font-mono text-goldGlow mt-4">TAP TO REVEAL</span>
+                </div>
+                <!-- Card Front (Dynamic Content) -->
+                <div class="card-back absolute inset-0 rounded-2xl border-2 border-cyanGlow bg-gradient-to-b from-aether-900 to-black p-4 flex flex-col justify-between backface-hidden rotate-y-180">
+                  <span class="text-[10px] font-mono text-cyanGlow" id="tCardPosition1">PAST</span>
+                  <div class="text-center space-y-2">
+                    <div class="text-4xl" id="tCardIcon1">🌟</div>
+                    <h4 class="font-display font-bold text-sm text-slate-100" id="tCardName1">THE STAR</h4>
+                  </div>
+                  <p class="text-[11px] font-sans text-slate-300 text-center italic" id="tCardDesc1">Hope, inspiration, and cosmic guidance.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: PRESENT -->
+          <div class="flex flex-col items-center space-y-3">
+            <span class="text-xs font-mono text-slate-400 tracking-wider">II. THE PRESENT</span>
+            <div id="tarotCard2" onclick="flipTarotCard(2)" class="w-full max-w-[220px] h-[320px] perspective-1000 cursor-pointer group">
+              <div class="card-inner relative w-full h-full transition-transform duration-700 transform-style-3d shadow-xl">
+                <!-- Card Back -->
+                <div class="card-front absolute inset-0 rounded-2xl border-2 border-pinkGlow/40 bg-aether-900 flex flex-col items-center justify-center p-4 backface-hidden text-center">
+                  <div class="w-16 h-16 rounded-full border border-pinkGlow/30 flex items-center justify-center text-2xl">⚡</div>
+                  <span class="text-[10px] font-mono text-pinkGlow mt-4">TAP TO REVEAL</span>
+                </div>
+                <!-- Card Front -->
+                <div class="card-back absolute inset-0 rounded-2xl border-2 border-pinkGlow bg-gradient-to-b from-aether-900 to-black p-4 flex flex-col justify-between backface-hidden rotate-y-180">
+                  <span class="text-[10px] font-mono text-pinkGlow" id="tCardPosition2">PRESENT</span>
+                  <div class="text-center space-y-2">
+                    <div class="text-4xl" id="tCardIcon2">🧙‍♂️</div>
+                    <h4 class="font-display font-bold text-sm text-slate-100" id="tCardName2">THE MAGICIAN</h4>
+                  </div>
+                  <p class="text-[11px] font-sans text-slate-300 text-center italic" id="tCardDesc2">Manifestation, resourcefulness, and power.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: FUTURE -->
+          <div class="flex flex-col items-center space-y-3">
+            <span class="text-xs font-mono text-slate-400 tracking-wider">III. THE FUTURE</span>
+            <div id="tarotCard3" onclick="flipTarotCard(3)" class="w-full max-w-[220px] h-[320px] perspective-1000 cursor-pointer group">
+              <div class="card-inner relative w-full h-full transition-transform duration-700 transform-style-3d shadow-xl">
+                <!-- Card Back -->
+                <div class="card-front absolute inset-0 rounded-2xl border-2 border-cyanGlow/40 bg-aether-900 flex flex-col items-center justify-center p-4 backface-hidden text-center">
+                  <div class="w-16 h-16 rounded-full border border-cyanGlow/30 flex items-center justify-center text-2xl">🌙</div>
+                  <span class="text-[10px] font-mono text-cyanGlow mt-4">TAP TO REVEAL</span>
+                </div>
+                <!-- Card Front -->
+                <div class="card-back absolute inset-0 rounded-2xl border-2 border-goldGlow bg-gradient-to-b from-aether-900 to-black p-4 flex flex-col justify-between backface-hidden rotate-y-180">
+                  <span class="text-[10px] font-mono text-goldGlow" id="tCardPosition3">FUTURE</span>
+                  <div class="text-center space-y-2">
+                    <div class="text-4xl" id="tCardIcon3">☀️</div>
+                    <h4 class="font-display font-bold text-sm text-slate-100" id="tCardName3">THE SUN</h4>
+                  </div>
+                  <p class="text-[11px] font-sans text-slate-300 text-center italic" id="tCardDesc3">Joy, success, celebration, and vitality.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Overall Reading Interpretation -->
+        <div id="tarotReadingSummary" class="glass-panel p-5 rounded-2xl space-y-2 hidden">
+          <h4 class="text-xs font-mono text-goldGlow flex items-center gap-1.5">
+            <span>🔮</span> CELESTIAL READING SYNTHESIS
+          </h4>
+          <p id="tarotSummaryText" class="text-sm font-sans text-slate-200 leading-relaxed">
+            --
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= TAB 4: LOGS & JOURNAL ================= -->
+    <section id="tab-journal" class="tab-content hidden space-y-6">
+      
+      <div class="glass-panel rounded-3xl p-6 md:p-8 space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div>
+            <h2 class="font-display font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyanGlow to-pinkGlow">
+              QUANTUM JOURNAL & HISTORY LOGS
+            </h2>
+            <p class="text-xs font-mono text-slate-400">All local readings, synastry computations, and tarot draws stored securely in client state.</p>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <button onclick="exportLogsJSON()" class="px-3 py-1.5 rounded-xl glass-panel text-xs font-mono hover:text-cyanGlow transition-colors">
+              📥 EXPORT JSON
+            </button>
+            <button onclick="clearLogsHistory()" class="px-3 py-1.5 rounded-xl glass-panel text-xs font-mono text-rose-400 hover:text-rose-300 transition-colors">
+              🗑️ CLEAR HISTORY
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="flex items-center space-x-2 text-xs font-mono">
+          <span class="text-slate-400">FILTER:</span>
+          <button onclick="filterLogs('all')" id="filter-all" class="log-filter-btn px-2.5 py-1 rounded-lg bg-white/10 text-cyanGlow">ALL</button>
+          <button onclick="filterLogs('Oracle')" id="filter-Oracle" class="log-filter-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white">ORACLE</button>
+          <button onclick="filterLogs('Synastry')" id="filter-Synastry" class="log-filter-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white">SYNASTRY</button>
+          <button onclick="filterLogs('Tarot')" id="filter-Tarot" class="log-filter-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white">TAROT</button>
+        </div>
+
+        <!-- History Log List Container -->
+        <div id="logsContainer" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+          <!-- Logs dynamically rendered here -->
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- System Settings Modal -->
+  <div id="settingsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass-panel rounded-3xl p-6 md:p-8 max-w-md w-full space-y-6 border border-white/20 animate-fadeIn">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="font-display font-bold text-lg text-slate-100">SYSTEM SETTINGS & ACCESSIBILITY</h3>
+        <button onclick="toggleSettingsModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+
+      <div class="space-y-4 text-xs font-mono">
+        <!-- Reduce Motion Toggle -->
+        <div class="flex items-center justify-between">
+          <div>
+            <label for="reduceMotionToggle" class="text-slate-200 font-semibold block">REDUCE MOTION / ANIMATIONS</label>
+            <span class="text-[10px] text-slate-400">Disables intensive WebGL particles & card flips.</span>
+          </div>
+          <input type="checkbox" id="reduceMotionToggle" onchange="toggleReduceMotion()" class="w-4 h-4 accent-cyanGlow rounded cursor-pointer">
+        </div>
+
+        <!-- Audio Volume Slider -->
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <label class="text-slate-200 font-semibold">SYNTH MASTER VOLUME</label>
+            <span id="volumeValueLabel" class="text-cyanGlow">70%</span>
+          </div>
+          <input type="range" id="volumeSlider" min="0" max="100" value="70" oninput="updateMasterVolume(this.value)" class="w-full accent-cyanGlow cursor-pointer">
+        </div>
+
+        <!-- Theme Contrast Mode -->
+        <div class="space-y-1">
+          <label class="text-slate-200 font-semibold block">THEME COLOR MODE</label>
+          <select id="themeSelect" onchange="changeThemeMode(this.value)" class="w-full glass-input rounded-xl p-2 text-slate-200">
+            <option value="aether" class="bg-aether-950">Deep Space Aether (Default)</option>
+            <option value="neon" class="bg-aether-950">Cyberpunk Neon</option>
+            <option value="gold" class="bg-aether-950">Solar Flare Gold</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-2 text-center">
+        <button onclick="toggleSettingsModal()" class="w-full py-2.5 rounded-xl bg-cyanGlow/20 text-cyanGlow font-mono text-xs border border-cyanGlow/40 hover:bg-cyanGlow/30 transition-all">
+          CLOSE SETTINGS
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full border-t border-white/5 py-4 px-4 text-center text-[11px] font-mono text-slate-500 relative z-10">
+    <p>AETHER ORB // 2027 COSMIC SYNAPSE • STANDALONE CLIENT-SIDE QUANTUM ORACLE</p>
+  </footer>
+
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    /* =========================================================================
+       1. GLOBAL STATE & INITIALIZATION
+       ========================================================================= */
+    const state = {
+      activeTab: 'oracle',
+      audioEnabled: true,
+      ambientPlaying: false,
+      masterVolume: 0.7,
+      reducedMotion: false,
+      logs: JSON.parse(localStorage.getItem('aether_orb_logs') || '[]'),
+      tarotDrawn: false,
+    };
+
+    // Stardate Clock Generator
+    function updateStardate() {
+      const now = new Date();
+      const stardate = (now.getFullYear() - 1900) * 1000 + (now.getMonth() * 30) + now.getDate() + (now.getHours() / 24);
+      document.getElementById('stardateDisplay').textContent = stardate.toFixed(2);
+    }
+    setInterval(updateStardate, 5000);
+    updateStardate();
+
+    /* =========================================================================
+       2. WEB AUDIO API SYNTHESIZER (NO EXTERNAL ASSETS NEEDED)
+       ========================================================================= */
+    let audioCtx = null;
+    let ambientDroneOsc1 = null;
+    let ambientDroneOsc2 = null;
+    let ambientGain = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // Play Custom Futuristic Chime / Tone
+    function playAudioTone(freq = 440, type = 'sine', duration = 0.5) {
+      if (!state.audioEnabled) return;
+      initAudio();
+
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(state.masterVolume * 0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        console.warn('Audio tone error:', e);
+      }
+    }
+
+    // Ambient Drone Generator
+    function toggleAmbientDrone() {
+      initAudio();
+      state.ambientPlaying = !state.ambientPlaying;
+      
+      const dot = document.getElementById('ambientStatusDot');
+      
+      if (state.ambientPlaying) {
+        dot.className = "w-2 h-2 rounded-full bg-pinkGlow animate-pulse";
+        
+        // Osc 1 (Low Sine)
+        ambientDroneOsc1 = audioCtx.createOscillator();
+        ambientDroneOsc2 = audioCtx.createOscillator();
+        ambientGain = audioCtx.createGain();
+
+        ambientDroneOsc1.type = 'sine';
+        ambientDroneOsc1.frequency.setValueAtTime(108, audioCtx.currentTime); // Low A
+
+        ambientDroneOsc2.type = 'triangle';
+        ambientDroneOsc2.frequency.setValueAtTime(162, audioCtx.currentTime); // E
+
+        ambientGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+        ambientGain.gain.linearRampToValueAtTime(state.masterVolume * 0.1, audioCtx.currentTime + 3);
+
+        ambientDroneOsc1.connect(ambientGain);
+        ambientDroneOsc2.connect(ambientGain);
+        ambientGain.connect(audioCtx.destination);
+
+        ambientDroneOsc1.start();
+        ambientDroneOsc2.start();
+      } else {
+        dot.className = "w-2 h-2 rounded-full bg-slate-500";
+        if (ambientGain) {
+          ambientGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 1);
+          setTimeout(() => {
+            if (ambientDroneOsc1) ambientDroneOsc1.stop();
+            if (ambientDroneOsc2) ambientDroneOsc2.stop();
+          }, 1000);
+        }
+      }
+    }
+
+    function toggleAudio() {
+      state.audioEnabled = !state.audioEnabled;
+      document.getElementById('audioIconOn').classList.toggle('hidden', !state.audioEnabled);
+      document.getElementById('audioIconOff').classList.toggle('hidden', state.audioEnabled);
+    }
+
+    function updateMasterVolume(val) {
+      state.masterVolume = val / 100;
+      document.getElementById('volumeValueLabel').textContent = val + '%';
+    }
+
+
+    /* =========================================================================
+       3. THREE.JS 3D SPATIAL CANVASES & ORB RENDERER
+       ========================================================================= */
+    let scene, camera, renderer, orbMesh, innerMesh, particleSystem;
+    let targetRotationX = 0, targetRotationY = 0;
+    let isDragging = false, previousMousePosition = { x: 0, y: 0 };
+
+    function initThreeJSOrb() {
+      const container = document.getElementById('orbCanvasContainer');
+      if (!container) return;
+
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.z = 6;
+
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // Outer Icosahedron Wireframe/Glass Mesh
+      const geometry = new THREE.IcosahedronGeometry(1.8, 3);
+      const material = new THREE.MeshBasicMaterial({
+        color: 0x00f3ff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35,
+      });
+      orbMesh = new THREE.Mesh(geometry, material);
+      scene.add(orbMesh);
+
+      // Inner Core Solid Sphere
+      const innerGeo = new THREE.SphereGeometry(1.0, 32, 32);
+      const innerMat = new THREE.MeshBasicMaterial({
+        color: 0xff00a0,
+        wireframe: false,
+        transparent: true,
+        opacity: 0.6,
+      });
+      innerMesh = new THREE.Mesh(innerGeo, innerMat);
+      scene.add(innerMesh);
+
+      // Orbital Floating Particle Rings
+      const particlesGeo = new THREE.BufferGeometry();
+      const particleCount = 400;
+      const posArray = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        posArray[i] = (Math.random() - 0.5) * 6;
+        posArray[i + 1] = (Math.random() - 0.5) * 6;
+        posArray[i + 2] = (Math.random() - 0.5) * 6;
+      }
+
+      particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+      const particlesMat = new THREE.PointsMaterial({
+        size: 0.03,
+        color: 0xffd700,
+        transparent: true,
+        opacity: 0.7,
+      });
+      particleSystem = new THREE.Points(particlesGeo, particlesMat);
+      scene.add(particleSystem);
+
+      // Mouse Drag Controls
+      renderer.domElement.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - previousMousePosition.x;
+        const deltaY = e.clientY - previousMousePosition.y;
+
+        orbMesh.rotation.y += deltaX * 0.008;
+        orbMesh.rotation.x += deltaY * 0.008;
+
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+
+      // Double Click Quantum Collapse Trigger
+      renderer.domElement.addEventListener('dblclick', () => {
+        triggerOrbPulse('gold');
+        playAudioTone(880, 'sine', 0.8);
+      });
+
+      // Handle Resize
+      window.addEventListener('resize', () => {
+        if (!renderer || !container) return;
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      });
+
+      animateOrb();
+    }
+
+    function animateOrb() {
+      requestAnimationFrame(animateOrb);
+
+      if (!state.reducedMotion) {
+        if (orbMesh) {
+          orbMesh.rotation.y += 0.003;
+          orbMesh.rotation.x += 0.001;
+        }
+        if (innerMesh) {
+          innerMesh.rotation.y -= 0.005;
+        }
+        if (particleSystem) {
+          particleSystem.rotation.y += 0.001;
+        }
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    function triggerOrbPulse(type = 'cyan') {
+      if (!orbMesh || !innerMesh) return;
+
+      playAudioTone(type === 'cyan' ? 528 : type === 'pink' ? 639 : 852, 'sine', 0.6);
+
+      const colorHex = type === 'cyan' ? 0x00f3ff : type === 'pink' ? 0xff00a0 : 0xffd700;
+      orbMesh.material.color.setHex(colorHex);
+      innerMesh.material.color.setHex(colorHex);
+
+      // Scale bounce pulse
+      orbMesh.scale.set(1.2, 1.2, 1.2);
+      setTimeout(() => {
+        orbMesh.scale.set(1.0, 1.0, 1.0);
+      }, 400);
+    }
+
+
+    /* Background Ambient Particle Canvas */
+    function initStarfieldCanvas() {
+      const canvas = document.getElementById('starfieldCanvas');
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      for (let i = 0; i < 80; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 1.5,
+          alpha: Math.random(),
+          speed: Math.random() * 0.02,
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ffffff';
+
+        stars.forEach(s => {
+          s.alpha += s.speed;
+          if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
+          ctx.globalAlpha = Math.abs(s.alpha);
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        requestAnimationFrame(render);
+      }
+      render();
+    }
+
+
+    /* =========================================================================
+       4. SPATIAL ORACLE AI LOGIC & VOICE SPEECH API
+       ========================================================================= */
+    const oracleAnswers = [
+      "Quantically Positive: The timeline shifts in your favor.",
+      "Negative Resonance: Re-evaluate your structural parameters.",
+      "Quantum Superposition: Outcome undecided until action is taken.",
+      "High Harmonic Alignment: Proceed with total conviction.",
+      "Temporary Entanglement: Delay decision until next lunar cycle.",
+      "Celestial Affirmation: The energy matrix yields to your intent.",
+    ];
+
+    const fateCardsList = [
+      { text: "The stars do not force; they reveal the path of least resistance.", rarity: "COMMON" },
+      { text: "Patience will convert raw kinetic potential into crystalline reality.", rarity: "RARE" },
+      { text: "Fortune favors the bold quantum architect.", rarity: "RARE" },
+      { text: "A rare cosmic wave approaches: Prepare for instant leap.", rarity: "MYTHIC" },
+      { text: "CELESTIAL REVELATION: The universe warps to accommodate your willpower.", rarity: "CELESTIAL" }
+    ];
+
+    function invokeSpatialOracle() {
+      const input = document.getElementById('oracleInput').value.trim();
+      if (!input) {
+        alert("Please enter or speak a query for the Oracle!");
+        return;
+      }
+
+      const category = document.getElementById('oracleCategory').value;
+      triggerOrbPulse('cyan');
+
+      document.getElementById('orbStateLabel').textContent = "COLLAPSING QUANTUM WAVEFUNCTION...";
+      
+      setTimeout(() => {
+        const answer = oracleAnswers[Math.floor(Math.random() * oracleAnswers.length)];
+        const cardObj = fateCardsList[Math.floor(Math.random() * fateCardsList.length)];
+        const prob = (70 + Math.random() * 29.9).toFixed(1) + "%";
+        const elements = ["⚡ AETHER / PLASMA", "🔥 FIRE / SOLAR", "🌊 WATER / FLUID", "🌪️ AIR / RESONANCE"];
+        const elem = elements[Math.floor(Math.random() * elements.length)];
+
+        // Update UI
+        document.getElementById('resultMainAnswer').textContent = answer;
+        document.getElementById('resultProbability').textContent = prob;
+        document.getElementById('resultElement').textContent = elem;
+        document.getElementById('resultFateCard').textContent = `"${cardObj.text}"`;
+        document.getElementById('resultRarityTag').textContent = cardObj.rarity;
+        document.getElementById('resultRarityTag').className = `text-[10px] font-mono px-2 py-0.5 rounded border rarity-${cardObj.rarity}`;
+
+        const cardContainer = document.getElementById('holographicCard');
+        cardContainer.className = `p-4 rounded-2xl border space-y-2 transition-all rarity-${cardObj.rarity}`;
+
+        document.getElementById('oracleResultCard').classList.remove('hidden');
+        document.getElementById('orbStateLabel').textContent = "QUANTUM STATE RESOLVED";
+
+        playAudioTone(784, 'sine', 0.8);
+
+        // Save Log
+        addLogItem({
+          type: 'Oracle',
+          title: `[${category}] ${input}`,
+          result: answer,
+          detail: `Prob: ${prob} • Rarity: ${cardObj.rarity}`
+        });
+
+      }, 1000);
+    }
+
+    /* Web Speech API Recognition */
+    let recognition = null;
+    function toggleSpeechRecognition() {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert("Web Speech API is not supported in this browser.");
+        return;
+      }
+
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRec();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      const statusEl = document.getElementById('speechStatus');
+      statusEl.classList.remove('hidden');
+
+      recognition.onresult = function(event) {
+        const text = event.results[0][0].transcript;
+        document.getElementById('oracleInput').value = text;
+        statusEl.classList.add('hidden');
+        invokeSpatialOracle();
+      };
+
+      recognition.onerror = function() {
+        statusEl.classList.add('hidden');
+      };
+
+      recognition.start();
+    }
+
+    function shareOracleOutcome() {
+      const q = document.getElementById('oracleInput').value;
+      const ans = document.getElementById('resultMainAnswer').textContent;
+      const text = `✨ AETHER ORB 2027 READING ✨\nQuery: "${q}"\nVerdict: ${ans}`;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        const ind = document.getElementById('savedIndicator');
+        ind.classList.remove('hidden');
+        setTimeout(() => ind.classList.add('hidden'), 2500);
+      });
+    }
+
+
+    /* =========================================================================
+       5. SYNASTRY RESONANCE ENGINE
+       ========================================================================= */
+    function calculateSynastry() {
+      const name1 = document.getElementById('synastryName1').value.trim();
+      const name2 = document.getElementById('synastryName2').value.trim();
+
+      if (!name1 || !name2) {
+        alert("Please enter both subjects' names to compute resonance.");
+        return;
+      }
+
+      playAudioTone(600, 'triangle', 0.5);
+
+      // Seed math algorithm
+      const combined = (name1 + name2).toLowerCase();
+      let seed = 0;
+      for (let i = 0; i < combined.length; i++) {
+        seed += combined.charCodeAt(i);
+      }
+
+      const overall = 60 + (seed % 40) + (seed % 10) / 10;
+      const intel = 70 + (seed * 3 % 29);
+      const emo = 65 + (seed * 7 % 34);
+      const spir = 68 + (seed * 5 % 31);
+
+      document.getElementById('synastryOverallScore').textContent = overall.toFixed(1) + "%";
+      document.getElementById('scoreIntellectual').textContent = intel + "%";
+      document.getElementById('scoreEmotional').textContent = emo + "%";
+      document.getElementById('scoreSpiritual').textContent = spir + "%";
+
+      // Progress bar animation
+      document.getElementById('synastryProgressBar').style.width = overall + "%";
+
+      const adviceList = [
+        "High emotional resonance detected. Focus on open communication during lunar shifts.",
+        "Complementary energy matrices. Subject A anchors while Subject B inspires growth.",
+        "Celestial twin flame resonance. Rare harmonic frequency unlocked."
+      ];
+      document.getElementById('synastryAdviceText').textContent = `"${adviceList[seed % adviceList.length]}"`;
+
+      document.getElementById('synastryWaveContainer').classList.remove('hidden');
+      document.getElementById('synastryResultPanel').classList.remove('hidden');
+
+      initSynastryWaveCanvas();
+
+      // Log
+      addLogItem({
+        type: 'Synastry',
+        title: `${name1} 💕 ${name2}`,
+        result: `Compatibility: ${overall.toFixed(1)}%`,
+        detail: `Intel: ${intel}% • Emo: ${emo}% • Spir: ${spir}%`
+      });
+    }
+
+    function initSynastryWaveCanvas() {
+      const canvas = document.getElementById('synastryCanvas');
+      const ctx = canvas.getContext('2d');
+      let step = 0;
+
+      function draw() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#ff00a0';
+
+        ctx.beginPath();
+        for (let x = 0; x < canvas.width; x++) {
+          const y = canvas.height / 2 + Math.sin((x + step) * 0.03) * 15 + Math.cos((x + step) * 0.01) * 10;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        step += 2;
+        if (!document.getElementById('synastryResultPanel').classList.contains('hidden')) {
+          requestAnimationFrame(draw);
+        }
+      }
+      draw();
+    }
+
+
+    /* =========================================================================
+       6. TAROT DECK LOGIC
+       ========================================================================= */
+    const tarotDeckData = [
+      { name: "THE STAR", icon: "🌟", desc: "Hope, inspiration, and cosmic guidance." },
+      { name: "THE MAGICIAN", icon: "🧙‍♂️", desc: "Manifestation, resourcefulness, and spatial power." },
+      { name: "THE SUN", icon: "☀️", desc: "Joy, success, celebration, and vitality." },
+      { name: "THE MOON", icon: "🌙", desc: "Intuition, dreams, and subconscious mysteries." },
+      { name: "THE EMPRESS", icon: "👑", desc: "Abundance, creation, and nature harmony." },
+      { name: "WHEEL OF FORTUNE", icon: "🎡", desc: "Karma, cycles, and quantum turn of fate." },
+    ];
+
+    function drawTarotDeck() {
+      playAudioTone(520, 'sine', 0.5);
+
+      // Reset card rotations
+      [1, 2, 3].forEach(id => {
+        const el = document.getElementById(`tarotCard${id}`).querySelector('.card-inner');
+        el.classList.remove('rotate-y-180');
+      });
+
+      setTimeout(() => {
+        const shuffled = [...tarotDeckData].sort(() => 0.5 - Math.random());
+        
+        [1, 2, 3].forEach((id, idx) => {
+          const card = shuffled[idx];
+          document.getElementById(`tCardName${id}`).textContent = card.name;
+          document.getElementById(`tCardIcon${id}`).textContent = card.icon;
+          document.getElementById(`tCardDesc${id}`).textContent = card.desc;
+        });
+
+        document.getElementById('tarotSummaryText').textContent = 
+          `Past alignment reveals ${shuffled[0].name}, evolving into ${shuffled[1].name} in your present workspace. The horizon promises ${shuffled[2].name}.`;
+
+        document.getElementById('tarotReadingSummary').classList.remove('hidden');
+
+        // Log
+        addLogItem({
+          type: 'Tarot',
+          title: `3-Card Spread`,
+          result: `${shuffled[0].name} ➔ ${shuffled[1].name} ➔ ${shuffled[2].name}`,
+          detail: `Synthesis logged.`
+        });
+      }, 400);
+    }
+
+    function flipTarotCard(id) {
+      playAudioTone(700, 'triangle', 0.3);
+      const inner = document.getElementById(`tarotCard${id}`).querySelector('.card-inner');
+      inner.classList.toggle('rotate-y-180');
+    }
+
+
+    /* =========================================================================
+       7. JOURNAL & HISTORY LOGS
+       ========================================================================= */
+    function addLogItem(item) {
+      item.timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      state.logs.unshift(item);
+      if (state.logs.length > 50) state.logs.pop(); // Keep last 50
+      localStorage.setItem('aether_orb_logs', JSON.stringify(state.logs));
+      renderLogs();
+    }
+
+    function renderLogs(filter = 'all') {
+      const container = document.getElementById('logsContainer');
+      container.innerHTML = '';
+
+      const filtered = filter === 'all' ? state.logs : state.logs.filter(l => l.type === filter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class="text-xs font-mono text-slate-500 text-center py-6">NO LOGS FOUND FOR THIS FILTER.</p>`;
+        return;
+      }
+
+      filtered.forEach(log => {
+        const div = document.createElement('div');
+        div.className = "glass-panel p-4 rounded-2xl border border-white/5 space-y-1 text-xs font-mono";
+        div.innerHTML = `
+          <div class="flex items-center justify-between text-slate-400">
+            <span class="text-cyanGlow font-bold">[${log.type.toUpperCase()}]</span>
+            <span>${log.timestamp}</span>
+          </div>
+          <p class="font-semibold text-slate-100">${log.title}</p>
+          <p class="text-pinkGlow">${log.result}</p>
+          <p class="text-[10px] text-slate-400">${log.detail || ''}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function filterLogs(type) {
+      document.querySelectorAll('.log-filter-btn').forEach(btn => {
+        btn.className = "log-filter-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white";
+      });
+      document.getElementById(`filter-${type}`).className = "log-filter-btn px-2.5 py-1 rounded-lg bg-white/10 text-cyanGlow";
+      renderLogs(type);
+    }
+
+    function exportLogsJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state.logs, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `aether_orb_logs_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function clearLogsHistory() {
+      if (confirm("Clear all locally stored readings and journal logs?")) {
+        state.logs = [];
+        localStorage.removeItem('aether_orb_logs');
+        renderLogs();
+      }
+    }
+
+
+    /* =========================================================================
+       8. TAB NAVIGATION & SETTINGS MODAL
+       ========================================================================= */
+    function switchTab(tabId) {
+      state.activeTab = tabId;
+      playAudioTone(400, 'sine', 0.2);
+
+      // Hide all contents
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+      // Update Desktop Nav styles
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = "tab-btn px-4 py-2 rounded-lg transition-all text-slate-400 hover:text-white hover:bg-white/5";
+      });
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if (activeNav) {
+        activeNav.className = "tab-btn px-4 py-2 rounded-lg transition-all font-semibold bg-cyanGlow/20 text-cyanGlow border border-cyanGlow/40";
+      }
+
+      // Update Mobile Nav styles
+      document.querySelectorAll('.mob-tab-btn').forEach(btn => btn.className = "mob-tab-btn flex flex-col items-center p-1 text-slate-400");
+      const activeMobNav = document.getElementById(`mob-nav-${tabId}`);
+      if (activeMobNav) activeMobNav.className = "mob-tab-btn flex flex-col items-center p-1 text-cyanGlow";
+    }
+
+    function toggleSettingsModal() {
+      const modal = document.getElementById('settingsModal');
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    }
+
+    function toggleReduceMotion() {
+      state.reducedMotion = document.getElementById('reduceMotionToggle').checked;
+    }
+
+    function changeThemeMode(val) {
+      // Future theme extensions handled cleanly via tailwind classes
+    }
+
+    function refreshForecast() {
+      const forecasts = [
+        "Quantum alignment favors bold decision trees.",
+        "Subconscious frequencies elevated. Trust intuition over logic today.",
+        "Solar flares inducing rapid synastry shifts. Stay grounded."
+      ];
+      document.getElementById('dailyForecastText').textContent = `"${forecasts[Math.floor(Math.random() * forecasts.length)]}"`;
+      playAudioTone(800, 'sine', 0.2);
+    }
+
+
+    /* =========================================================================
+       9. ON DOM LOAD INITIALIZATION
+       ========================================================================= */
+    window.addEventListener('load', () => {
+      initStarfieldCanvas();
+      initThreeJSOrb();
+      renderLogs();
+    });
+  </script>
 </body>
 </html>
